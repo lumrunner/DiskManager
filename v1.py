@@ -1,5 +1,3 @@
-import json
-
 SECTOR_SIZE = 512
 DRIVE = r'\\.\PhysicalDrive3'
 
@@ -44,7 +42,7 @@ class mbr():
         '''returns the hex representation of the mbr'''
         h = []
         for entry in range(0, 0x1BE*2, 2):
-            entryHex = str(self.boot[entry]) + str(self.boot[entry + 1])
+            entryHex = str(int(str(self.boot[entry]) + str(self.boot[entry + 1]), 16)) #there has to be a better way to do this
             h.append(entryHex)
        
         for part in self.partitions:
