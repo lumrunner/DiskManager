@@ -1,5 +1,5 @@
 SECTOR_SIZE = 512
-DRIVE = r'\\.\PhysicalDrive3'
+DRIVE = r'\\.\PhysicalDrive2'
 
 
 def addStr(i):
@@ -9,6 +9,13 @@ def addStr(i):
 
     return i
 
+def convertStr(s):
+    '''converts a string of 8 bit integers into a string of hex'''
+    i = int(s)
+    b = int(i.to_bytes(1, 'big').hex(), 16)
+    print('\n\n', b)
+    return b
+    
 class partition():
     '''a partition of a hard drive'''
 
@@ -89,14 +96,12 @@ newMBR = mbr(goodBoot, part0, part1, part2, part3)
 how = newMBR.getHex()
 with open('temp.txt', 'wb') as tempFile:
     for entry in how:
-        tempFile.write(bytes().fromhex(entry))
-
-with open('temp.txt', 'rb') as tempFile:
-    tempFile.seek(0)
-    finalMBR = tempFile.read(SECTOR_SIZE)
-#print(finalMBR.hex())
+        b = convertStr(addStr(entry))
+        tempFile.write(b.to_bytes(1, 'little'))
 
 repairedDrive = open(DRIVE, 'rb+')
 repairedDrive.seek(0)
-#repairedDrive.write()
+for entry in how:
+        b = convertStr(addStr(entry))
+        repairedDrive.write(b.to_bytes(1, 'little'))
 repairedDrive.close()
